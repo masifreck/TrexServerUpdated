@@ -25,7 +25,7 @@ app.use('/api/v1/vendor',VendorRouter)
 app.use('/api',logoutRoutes)
 app.use('/api/v1/otpless', otplessRouter);
 app.get('/',(req,res)=>{
-    res.status(200).send('<h1>Trex Application</h1>')
+    res.status(200).send('<h1>Trex Application Server Running successfull</h1>')
 })
 
 //port
