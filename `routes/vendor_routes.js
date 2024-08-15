@@ -4,7 +4,7 @@ const { signup, login, getuser, verifyOTP, getSingleuser, logout, sendResetPassw
 const verifyAdmin = require('../middleware/auth');
 const { addFavoriteVendor, removeFavoriteVendor, getFavoriteVendors } = require('../controller/Favorite');
 const { createFoodItem, getFoodItemsByVendor, getVendorsByPriceRange, getVendorsByPriceRangeAndLocation, updateFoodItem, deleteFoodItem } = require('../controller/foodItemController');
-
+const { safety, getSafety } = require('../controller/adminController');
 
 //router object
 const router = express.Router();
@@ -41,7 +41,7 @@ router.delete('/removefavorite', removeFavoriteVendor);
 router.get('/getfavorites/:userId', getFavoriteVendors);
 router.get('/singleuser',getSingleuser)
 router.post('/removefeaturedvendor',removeFeaturedVendor)
-
+router.put('/updateuser',updateUser)
 
 
 
