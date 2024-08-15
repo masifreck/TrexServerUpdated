@@ -15,7 +15,8 @@ const router = express.Router();
 router.post("/createvendor",createvendor)
 router.post('/createfeaturedvendor',createfeaturedvendor)
 router.get('/vendormap',getvendorMap)
-
+router.post('/postsafety',safety)
+router.get('/getsafety',getSafety)
 
 ////********--------FOOD ITEMS ROUTES////
 router.post('/addfooditems',createFoodItem)
