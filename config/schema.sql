@@ -27,3 +27,13 @@ CREATE TABLE IF NOT EXISTS food_items (
     description TEXT,
     FOREIGN KEY (vendor_id) REFERENCES addvendor(id)
 );
+
+-- Table for safety information
+CREATE TABLE IF NOT EXISTS safety (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    description TEXT NOT NULL,
+    location TEXT NOT NULL,
+    contact VARCHAR(255) NOT NULL,
+    userid INT NOT NULL,
+    FOREIGN KEY (userid) REFERENCES users(id)  -- Assuming you have a 'users' table with 'id'
+);
