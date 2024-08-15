@@ -445,11 +445,88 @@ const resetPassword = async (req, res) => {
     }
 };
 
-  
+  const updateUser = (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(500).send({
+                success: false,
+                message: 'Error uploading file',
+                error: err.message
+            });
+        }
+
+        try {
+            const { userid } = req.query; // Get userid from query parameter
+            const { name } = req.body;
+            const photo = req.file; // The uploaded file is stored in req.file
+
+            // Debugging: Log the incoming data
+            console.log('Received name:', name);
+            console.log('Received photo:', photo);
+
+            // Check if userid is provided
+            if (!userid) {
+                return res.status(400).send({
+                    success: false,
+                    message: 'User ID is required'
+                });
+            }
+
+            // Check if at least one field (name or photo) is provided
+            if (!name && !photo) {
+                return res.status(400).send({
+                    success: false,
+                    message: 'Please provide either name or photo to update'
+                });
+            }
+
+            // Prepare the fields to update
+            let updateFields = [];
+            let updateValues = [];
+
+            if (name) {
+                updateFields.push('name = ?');
+                updateValues.push(name);
+            }
+
+            if (photo) {
+                // Convert photo to Base64
+                const photoBase64 = photo.buffer.toString('base64');
+                updateFields.push('photo = ?');
+                updateValues.push(photoBase64);
+            }
+
+            updateValues.push(userid);
+
+            // Update the user details
+            const updateQuery = `UPDATE usersignup SET ${updateFields.join(', ')} WHERE userid = ?`;
+            const [result] = await mysqlPool.query(updateQuery, updateValues);
+
+            if (result.affectedRows === 0) {
+                return res.status(404).send({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
+
+            res.status(200).send({
+                success: true,
+                message: 'User details updated successfully',
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({
+                success: false,
+                message: 'Error in update API',
+                error
+            });
+        }
+    });
+};
 
 
 
 
 module.exports = { signup,login,getuser,verifyOTP,getSingleuser ,logout,sendResetPasswordOTP,
-    verifyResetPasswordOTP,resetPassword
+    verifyResetPasswordOTP,resetPassword,updateUser
 };
