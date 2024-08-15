@@ -35,5 +35,5 @@ CREATE TABLE IF NOT EXISTS safety (
     location TEXT NOT NULL,
     contact VARCHAR(255) NOT NULL,
     userid INT NOT NULL,
-    FOREIGN KEY (userid) REFERENCES users(id)  -- Assuming you have a 'users' table with 'id'
+    FOREIGN KEY (userid) REFERENCES usersignup(userid)
 );
