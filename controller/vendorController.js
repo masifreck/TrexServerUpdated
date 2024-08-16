@@ -540,11 +540,47 @@ const removeFeaturedVendor = async (req, res) => {
   }
 };
 
+const getFeaturedVendorByCityName = async (req, res) => {
+  try {
+    const { cityname } = req.query;
 
+    if (!cityname) {
+      return res.status(400).send({
+        success: false,
+        message: 'Please provide a city name'
+      });
+    }
+
+    const data = await mysqlPool.query(
+      `SELECT * FROM addvendor WHERE cityname = ? AND isFeatured = true`,
+      [cityname]
+    );
+
+    if (data.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: 'No featured vendor found in this city'
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: 'Featured vendor retrieved successfully',
+      data: data[0]  // Assuming you're expecting one vendor in the city
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: 'Error retrieving featured vendor',
+      error
+    });
+  }
+};
 
 
 
 
 module.exports={getvendor,createvendor,getvendorMap,getSingleVendorDetails, getVendorListByCity,createfeaturedvendor,updateVendor,getFeaturedVendors,
-  removeFeaturedVendor
+  removeFeaturedVendor, getFeaturedVendorByCityName
 }
