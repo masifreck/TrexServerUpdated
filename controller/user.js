@@ -444,6 +444,8 @@ const resetPassword = async (req, res) => {
         });
     }
 };
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage: storage }).single('photo'); 
 
   const updateUser = (req, res) => {
     upload(req, res, async (err) => {
