@@ -1,5 +1,5 @@
 const express=require('express')
-const { getvendor, createvendor, getvendorMap, getSingleVendorDetails, getVendorListByCity, createfeaturedvendor, updateVendor, getFeaturedVendors, removeFeaturedVendor } = require('../controller/vendorController');
+const { getvendor, createvendor, getvendorMap, getSingleVendorDetails, getVendorListByCity, createfeaturedvendor, updateVendor, getFeaturedVendors, removeFeaturedVendor,getFeaturedVendorByCityName } = require('../controller/vendorController');
 const { signup, login, getuser, verifyOTP, getSingleuser, logout, sendResetPasswordOTP, verifyResetPasswordOTP, resetPassword, updateUser } = require('../controller/user');
 const verifyAdmin = require('../middleware/auth');
 const { addFavoriteVendor, removeFavoriteVendor, getFavoriteVendors } = require('../controller/Favorite');
@@ -51,7 +51,7 @@ router.put('/updateuser',updateUser)
 ////---------*****VENDOR****-----------/////
 router.get("/vendorlist",getvendor)
 router.get('/singlevendor',getSingleVendorDetails)
-router.get('/vendorbycity',getVendorListByCity)
+router.get('/vendorbycity',getFeaturedVendorByCityName)
 router.put('/updatevenor',updateVendor)
 router.get('/getvendorbyprice',getVendorsByPriceRangeAndLocation)
 router.get('/getfeaturedvendor',getFeaturedVendors)
