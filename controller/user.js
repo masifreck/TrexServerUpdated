@@ -14,7 +14,7 @@ const signup = async (req, res) => {
     try {
         const {userid, email, mobile, name, password, role } = req.body;
 
-        if (!email || !mobile || !password) {
+        if (!name || !mobile || !password) {
             return res.status(400).send({
                 success: false,
                 message: 'Please provide mandatory fields'
@@ -22,7 +22,7 @@ const signup = async (req, res) => {
         }
 
         // Validate email
-        if (!validator.isEmail(email)) {
+        if (validator?.isEmail(email)) {
             return res.status(400).send({
                 success: false,
                 message: 'Please enter a valid email'
