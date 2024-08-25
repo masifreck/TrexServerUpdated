@@ -284,7 +284,7 @@ const getSingleuser = async (req, res) => {
         });
       }
   
-      let sqlQuery = 'SELECT userid, name, mobile, email FROM usersignup WHERE';
+      let sqlQuery = 'SELECT userid, name, mobile, email,photo FROM usersignup WHERE';
       const queryParams = [];
   
       if (isMobile) {
@@ -318,7 +318,6 @@ const getSingleuser = async (req, res) => {
       });
     }
   };
-  
   
   
   const sendResetPasswordOTP = async (req, res) => {
