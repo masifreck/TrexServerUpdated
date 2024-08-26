@@ -21,7 +21,7 @@ const signup = async (req, res) => {
             });
         }
 
-        // Validate email
+      // Validate email
         if (validator?.isEmail(email)) {
             return res.status(400).send({
                 success: false,
