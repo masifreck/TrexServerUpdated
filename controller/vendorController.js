@@ -46,9 +46,9 @@ const getvendorMap = async (req, res) => {
     const minLongitude = parseFloat(minLon);
     const maxLongitude = parseFloat(maxLon);
 
-    // Start building the query
+    // Start building the query to select only id, latitude, and longitude
     let query = `
-      SELECT DISTINCT v.* 
+      SELECT DISTINCT v.id, v.latitude, v.longitude 
       FROM addvendor v
     `;
 
@@ -84,6 +84,7 @@ const getvendorMap = async (req, res) => {
       });
     }
 
+    // Send only id, longitude, and latitude in the response
     res.status(200).send({
       success: true,
       data: rows
