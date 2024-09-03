@@ -98,7 +98,78 @@ const getvendorMap = async (req, res) => {
     });
   }
 };
+//GET VENDOR FOR EXPLORE 
+const getvendorExplore = async (req, res) => {
+  try {
+    const { min_price, max_price, minLat, maxLat, minLon, maxLon } = req.query;
 
+    // Validate that location parameters are present
+    if (!minLat || !maxLat || !minLon || !maxLon) {
+      return res.status(400).send({
+        success: false,
+        message: 'Bounding box parameters are required'
+      });
+    }
+
+    // Convert location parameters to appropriate types
+    const minLatitude = parseFloat(minLat);
+    const maxLatitude = parseFloat(maxLat);
+    const minLongitude = parseFloat(minLon);
+    const maxLongitude = parseFloat(maxLon);
+
+    // Start building the query to select only id, latitude, and longitude
+    let query = `
+      SELECT DISTINCT v.id, v.latitude, v.longitude , v.description, v.title,v.name,
+      v.cityname,v.opentime,v.closetime,v.image_url,v.type
+      FROM addvendor v 
+    `;
+
+    // If price filters are provided, join with the food_items table and add price conditions
+    if (min_price && max_price) {
+      const minPrice = parseFloat(min_price);
+      const maxPrice = parseFloat(max_price);
+      query += `
+        JOIN food_items f ON v.id = f.vendor_id
+        WHERE f.price BETWEEN ? AND ?
+        AND v.latitude BETWEEN ? AND ?
+        AND v.longitude BETWEEN ? AND ?
+      `;
+    } else {
+      // If no price filters are provided, just filter by location
+      query += `
+        WHERE v.latitude BETWEEN ? AND ?
+        AND v.longitude BETWEEN ? AND ?
+      `;
+    }
+
+    // Prepare query parameters based on the presence of price filters
+    const queryParams = min_price && max_price 
+      ? [parseFloat(min_price), parseFloat(max_price), minLatitude, maxLatitude, minLongitude, maxLongitude]
+      : [minLatitude, maxLatitude, minLongitude, maxLongitude];
+
+    const [rows] = await mysqlPool.query(query, queryParams);
+
+    if (rows.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: 'No vendors found in the specified area'
+      });
+    }
+
+    // Send only id, longitude, and latitude in the response
+    res.status(200).send({
+      success: true,
+      data: rows
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({
+      success: false,
+      message: 'Error in Get Vendor Map API',
+      error: error.message
+    });
+  }
+};
   
 //GET SINGLE VENDOR 
 const getSingleVendorDetails = async (req, res) => {
@@ -583,5 +654,5 @@ const getFeaturedVendorByCityName = async (req, res) => {
 
 
 module.exports={getvendor,createvendor,getvendorMap,getSingleVendorDetails, getVendorListByCity,createfeaturedvendor,updateVendor,getFeaturedVendors,
-  removeFeaturedVendor, getFeaturedVendorByCityName
+  removeFeaturedVendor, getFeaturedVendorByCityName,getvendorExplore
 }
